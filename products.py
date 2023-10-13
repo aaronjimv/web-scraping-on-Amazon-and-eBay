@@ -33,7 +33,7 @@ class Products:
             cursor.execute(sql, datos)
             conn.commit()
             conn.close()
-            return "Saved Products"
+            return "\nSaved Products\n"
         except mysql.Error as err:
             return "ERROR"+err
 

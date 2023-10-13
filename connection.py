@@ -16,7 +16,7 @@ def connect():
             password = '',
             database = 'web_scraping'
         )
-        print("- Connected to the database -")
+        print("\n- Connected to the database -")
         return connection
     except mysql.Error as err:
         print(f'ERROR:\n {err}\n')

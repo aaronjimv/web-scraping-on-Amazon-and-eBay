@@ -48,7 +48,7 @@ def get_amazon_object(soup):
             print(f'{i+1}. {name}. Precio: {price}')
         except:
             pass
-    selected = int(input("Chooses the Amazon product: "))
+    selected = int(input("\nChooses the Amazon product: "))
     amazon_url = products[selected-1].find('a', {'class':'a-link-normal s-no-outline'}).attrs['href']
     amazon_price = products[selected-1].find('span', {'class':'a-price'}).text
     return amazon_url, amazon_price.split('$').pop().replace(',', '')
@@ -72,7 +72,7 @@ def get_ebay_object(soup):
             print(f'{i+1}. {name}. Precio: {price}')
         except:
             pass
-    selected = int(input("Chooses the eBay product: "))
+    selected = int(input("\nChooses the eBay product: "))
     ebay_url = products[selected-1].find('a', {'class':'s-item__link'}).attrs['href']
     ebay_price = products[selected-1].find('span', {'class':'s-item__price'}).text
     return ebay_url, ebay_price[3:]
@@ -91,7 +91,7 @@ def check_price():
             new_amazon_price = amazon_soup.find('span', {'class':'a-offscreen'}).text
             new_ebay_price = ebay_soup.find('span', {'class':'ux-textspans ux-textspans--SECONDARY ux-textspans--BOLD'}).text
 
-            print(f'Product {product[1].replace("+", " ")}: ')
+            print(f'\nProduct {product[1].replace("+", " ")}: ')
             print(f'Amazon: Old price: {str(product[4])} New price: {new_amazon_price.split('$').pop().replace(',', '')}')
             print(f'eBay: Old price: {str(product[5])} New price: {new_ebay_price[4:]}')
 
@@ -110,7 +110,7 @@ def init():
     Initializes the web scraping process.
     Asks the user if they want to register a new product, then starts the price monitoring thread.
     '''
-    print(" -- Web Scraping -- ")
+    print(" -- Web Scraping -- \n")
     response = input("You want to register a new product? y/n: ")
 
     if response == "y":
