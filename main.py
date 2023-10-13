@@ -7,6 +7,15 @@ from products import Products
 from threading import Thread
 
 def get_soup(url):
+    '''
+    Retrieves and returns the BeautifulSoup object of a given URL.
+
+    Parameters:
+        url (str): The URL to scrape.
+
+    Returns:
+        BeautifulSoup: The BeautifulSoup object containing the parsed HTML content of the URL.
+    '''
     options = webdriver.ChromeOptions() 
     options.add_experimental_option('excludeSwitches', ['enable-logging']) 
     service = Service('driver/chromedriver.exe') 
@@ -22,6 +31,15 @@ def get_soup(url):
     return soup
 
 def get_amazon_object(soup):
+    '''
+    Extracts and returns the selected Amazon product URL and price from the given Amazon search results page.
+
+    Parameters:
+        soup (BeautifulSoup): The BeautifulSoup object of the Amazon search results page.
+
+    Returns:
+        tuple: A tuple containing the Amazon product URL (str) and price (str).
+    '''
     products = soup.find_all('div', {'class':'s-result-item'})
     for i, product in enumerate(products):
         try:
@@ -37,6 +55,15 @@ def get_amazon_object(soup):
 
 
 def get_ebay_object(soup):
+    '''
+    Extracts and returns the selected eBay product URL and price from the given eBay search results page.
+
+    Parameters:
+        soup (BeautifulSoup): The BeautifulSoup object of the eBay search results page.
+
+    Returns:
+        tuple: A tuple containing the eBay product URL (str) and price (str).
+    '''
     products = soup.find_all('li', {'class':'s-item s-item__pl-on-bottom'})
     for i, product in enumerate(products):
         try:
@@ -51,6 +78,10 @@ def get_ebay_object(soup):
     return ebay_url, ebay_price[3:]
 
 def check_price():
+    '''
+    Periodically checks the prices of products in the database on Amazon and eBay.
+    Prints price changes and comparisons.
+    '''
     while True:
         products = Products(None, None, None, None, None).get_products()
         for product in products:
@@ -75,6 +106,10 @@ def check_price():
         sleep(3600)
 
 def init():
+    '''
+    Initializes the web scraping process.
+    Asks the user if they want to register a new product, then starts the price monitoring thread.
+    '''
     print(" -- Web Scraping -- ")
     response = input("Desea registrar un nuevo producto? y/n: ")
 
