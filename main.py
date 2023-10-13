@@ -48,7 +48,7 @@ def get_amazon_object(soup):
             print(f'{i+1}. {name}. Precio: {price}')
         except:
             pass
-    selected = int(input("Escoja el producto de Amazon: "))
+    selected = int(input("Chooses the Amazon product: "))
     amazon_url = products[selected-1].find('a', {'class':'a-link-normal s-no-outline'}).attrs['href']
     amazon_price = products[selected-1].find('span', {'class':'a-price'}).text
     return amazon_url, amazon_price.split('$').pop().replace(',', '')
@@ -72,7 +72,7 @@ def get_ebay_object(soup):
             print(f'{i+1}. {name}. Precio: {price}')
         except:
             pass
-    selected = int(input("Escoja el producto de Amazon: "))
+    selected = int(input("Chooses the eBay product: "))
     ebay_url = products[selected-1].find('a', {'class':'s-item__link'}).attrs['href']
     ebay_price = products[selected-1].find('span', {'class':'s-item__price'}).text
     return ebay_url, ebay_price[3:]
@@ -91,18 +91,18 @@ def check_price():
             new_amazon_price = amazon_soup.find('span', {'class':'a-offscreen'}).text
             new_ebay_price = ebay_soup.find('span', {'class':'ux-textspans ux-textspans--SECONDARY ux-textspans--BOLD'}).text
 
-            print(f'Producto {product[1].replace("+", " ")}: ')
-            print(f'Amazon: Precio anterior: {str(product[4])} Nuevo Precio: {new_amazon_price.split('$').pop().replace(',', '')}')
-            print(f'eBay: Precio anterior: {str(product[5])} Nuevo Precio: {new_ebay_price[4:]}')
+            print(f'Product {product[1].replace("+", " ")}: ')
+            print(f'Amazon: Old price: {str(product[4])} New price: {new_amazon_price.split('$').pop().replace(',', '')}')
+            print(f'eBay: Old price: {str(product[5])} New price: {new_ebay_price[4:]}')
 
             if float(new_amazon_price.split('$').pop().replace(',', '')) < float(product[4]):
-                print(f'El producto {product[1].replace("+", " ")} bajó de precio en Amazon')
+                print(f'The product {product[1].replace("+", " ")} price dropped on Amazon')
             if float(new_ebay_price[4:]) < float(product[5]):
-                print(f'El producto {product[1].replace("+", " ")} bajó de precio en eBay')
+                print(f'The product {product[1].replace("+", " ")} price dropped on eBay')
             if float(new_amazon_price.split('$').pop().replace(',', '')) < float(new_ebay_price[4:]):
-                print(f'El producto {product[1].replace("+", " ")} tiene un precio menor en Amazon')
+                print(f'The product {product[1].replace("+", " ")} It has a lower price on Amazon')
             if float(new_ebay_price[4:]) < float(new_amazon_price.split('$').pop().replace(',', '')):
-                print(f'El producto {product[1].replace("+", " ")} tiene un precio menor en eBay')
+                print(f'The product {product[1].replace("+", " ")} It has a lower price on eBay')
         sleep(3600)
 
 def init():
@@ -111,10 +111,10 @@ def init():
     Asks the user if they want to register a new product, then starts the price monitoring thread.
     '''
     print(" -- Web Scraping -- ")
-    response = input("Desea registrar un nuevo producto? y/n: ")
+    response = input("You want to register a new product? y/n: ")
 
     if response == "y":
-        name = input("Ingrese el nombre del producto a buscar: ").replace(" ", "+")
+        name = input("Enter the name of the product to search: ").replace(" ", "+")
         amazon_result_url = f'https://www.amazon.com/s?k={name}&__mk_es_US=ÅMÅŽÕÑ&crid=2B6YI9ANUULVP&sprefix=nintendo+switch%2Caps%2C131&ref=nb_sb_noss_2'
         ebay_result_url = f'https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2380057.m570.l1311&_nkw={name}&_sacat=0'
 
