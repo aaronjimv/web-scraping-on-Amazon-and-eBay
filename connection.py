@@ -18,4 +18,4 @@ def connect():
         print("Conectado a la base de datos")
         return connection
     except mysql.Error as err:
-        print("ERROR: "+err)
+        print(f'ERROR:\n {err}\n')
