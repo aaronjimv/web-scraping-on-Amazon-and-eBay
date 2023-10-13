@@ -1,8 +1,6 @@
 # Web Scraping and Price Monitor
 
-This project includes scripts for simple web scraping for Amazon and eBay and monitoring product prices. It also stores the data in a MySQL database for tracking.
-
-## Scripts
+This project includes scripts for simple web scraping on Amazon and eBay and monitoring product prices. It also stores the data in a MySQL database for tracking.
 
 ### `main.py`
 
