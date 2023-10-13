@@ -11,6 +11,7 @@ def connect():
     try:
         connection = mysql.connect(
             host = 'localhost',
+            port = 33065,
             user = 'root',
             password = '',
             database = 'web_scraping'
