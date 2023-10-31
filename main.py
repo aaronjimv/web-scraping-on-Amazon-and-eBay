@@ -157,7 +157,7 @@ def check_price():
                     print(
                         f'The product {product[1].replace("+", " ")} It has a lower price on eBay'
                     )
-                
+
                 sleep(3600)
             except:
                 print("Cambio en el html de la pagina!!!")
@@ -182,10 +182,10 @@ def init():
 
         amazon_soup = get_soup(amazon_result_url)
         amazon_url, amazon_price = get_amazon_object(amazon_soup)
-        
+
         ebay_soup = get_soup(ebay_result_url)
         ebay_url, ebay_price = get_ebay_object(ebay_soup)
-        
+
         products = Products(
             name,
             amazon_url,
@@ -197,6 +197,7 @@ def init():
 
     thread = Thread(target=check_price)
     thread.start()
+
 
 if __name__ == "__main__":
     init()
