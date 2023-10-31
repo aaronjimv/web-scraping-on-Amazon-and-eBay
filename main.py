@@ -2,7 +2,6 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from time import sleep
 from selenium.webdriver.chrome.service import Service
-from connection import *
 from products import Products
 from threading import Thread
 
