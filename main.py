@@ -5,19 +5,22 @@ from selenium.webdriver.chrome.service import Service
 from products import Products
 from threading import Thread
 
+
 def get_soup(url):
     '''
-    Retrieves and returns the BeautifulSoup object of a given URL.
+    Retrieves and returns the BeautifulSoup object of
+    a given URL.
 
     Parameters:
         url (str): The URL to scrape.
 
     Returns:
-        BeautifulSoup: The BeautifulSoup object containing the parsed HTML content of the URL.
+        BeautifulSoup: The BeautifulSoup object
+            containing the parsed HTML content of the URL.
     '''
-    options = webdriver.ChromeOptions() 
-    options.add_experimental_option('excludeSwitches', ['enable-logging']) 
-    service = Service('driver/chromedriver.exe') 
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    service = Service('driver/chromedriver.exe')
     driver = webdriver.Chrome(service=service, options=options)
 
     driver.get(url)
@@ -29,56 +32,89 @@ def get_soup(url):
 
     return soup
 
+
 def get_amazon_object(soup):
     '''
-    Extracts and returns the selected Amazon product URL and price from the given Amazon search results page.
+    Extracts and returns the selected Amazon product
+    URL and price from the given Amazon search results
+    page.
 
     Parameters:
-        soup (BeautifulSoup): The BeautifulSoup object of the Amazon search results page.
+        soup (BeautifulSoup): The BeautifulSoup object
+            of the Amazon search results page.
 
     Returns:
-        tuple: A tuple containing the Amazon product URL (str) and price (str).
+        tuple: A tuple containing the Amazon product
+            URL (str) and price (str).
     '''
-    products = soup.find_all('div', {'class':'s-result-item'})
+    products = soup.find_all('div', {'class': 's-result-item'})
     for i, product in enumerate(products):
         try:
-            name = product.find('span', {'class':'a-size-medium a-color-base a-text-normal'}).text
-            price = product.find('span', {'class':'a-price'}).text
+            name = product.find(
+                'span',
+                {'class': 'a-size-medium a-color-base a-text-normal'}
+            ).text
+            price = product.find(
+                'span',
+                {'class': 'a-price'}
+            ).text
             print(f'{i+1}. {name}. Precio: {price}')
         except:
-            pass
+            print("ERROR!!!")
+
     selected = int(input("\nChooses the Amazon product: "))
-    amazon_url = products[selected-1].find('a', {'class':'a-link-normal s-no-outline'}).attrs['href']
-    amazon_price = products[selected-1].find('span', {'class':'a-price'}).text
+    amazon_url = products[selected-1].find(
+        'a',
+        {'class': 'a-link-normal s-no-outline'}
+    ).attrs['href']
+    amazon_price = products[selected-1].find(
+        'span',
+        {'class': 'a-price'}
+    ).text
     return amazon_url, amazon_price.split('$').pop().replace(',', '')
 
 
 def get_ebay_object(soup):
     '''
-    Extracts and returns the selected eBay product URL and price from the given eBay search results page.
+    Extracts and returns the selected eBay product
+    URL and price from the given eBay search results page.
 
     Parameters:
-        soup (BeautifulSoup): The BeautifulSoup object of the eBay search results page.
+        soup (BeautifulSoup): The BeautifulSoup object
+            of the eBay search results page.
 
     Returns:
-        tuple: A tuple containing the eBay product URL (str) and price (str).
+        tuple: A tuple containing the eBay
+            product URL (str) and price (str).
     '''
-    products = soup.find_all('li', {'class':'s-item s-item__pl-on-bottom'})
+    products = soup.find_all(
+        'li',
+        {'class': 's-item s-item__pl-on-bottom'}
+    )
     for i, product in enumerate(products):
         try:
-            name = product.find('div', {'class':'s-item__title'}).text
-            price = product.find('span', {'class':'s-item__price'}).text
+            name = product.find('div', {'class': 's-item__title'}).text
+            price = product.find('span', {'class': 's-item__price'}).text
             print(f'{i+1}. {name}. Precio: {price}')
         except:
             pass
     selected = int(input("\nChooses the eBay product: "))
-    ebay_url = products[selected-1].find('a', {'class':'s-item__link'}).attrs['href']
-    ebay_price = products[selected-1].find('span', {'class':'s-item__price'}).text
+    ebay_url = products[selected-1].find(
+        'a',
+        {'class': 's-item__link'}
+    ).attrs['href']
+    ebay_price = products[selected-1].find(
+        'span',
+        {'class': 's-item__price'}
+    ).text
     return ebay_url, ebay_price[3:]
+
 
 def check_price():
     '''
-    Periodically checks the prices of products in the database on Amazon and eBay.
+    Periodically checks the prices of products
+    in the database on Amazon and eBay.
+
     Prints price changes and comparisons.
     '''
     while True:
@@ -88,33 +124,56 @@ def check_price():
                 amazon_soup = get_soup("https://www.amazon.com"+product[2])
                 ebay_soup = get_soup(product[3])
 
-                new_amazon_price = amazon_soup.find('span', {'class':'a-offscreen'}).text
-                new_ebay_price = ebay_soup.find('span', {'class':'ux-textspans ux-textspans--SECONDARY ux-textspans--BOLD'}).text
+                new_amazon_price = amazon_soup.find(
+                    'span',
+                    {'class': 'a-offscreen'}
+                ).text
+                new_ebay_price = ebay_soup.find(
+                    'span',
+                    {'class': 'ux-textspans ux-textspans--SECONDARY ux-textspans--BOLD'}
+                ).text
 
                 print(f'\nProduct {product[1].replace("+", " ")}: ')
-                print(f'Amazon: Old price: {str(product[4])} New price: {new_amazon_price.split('$').pop().replace(',', '')}')
-                print(f'eBay: Old price: {str(product[5])} New price: {new_ebay_price[4:]}')
+                print(
+                    f'Amazon: Old price: {str(product[4])} New price: {new_amazon_price.split('$').pop().replace(',', '')}'
+                )
+                print(
+                    f'eBay: Old price: {str(product[5])} New price: {new_ebay_price[4:]}'
+                )
 
                 if float(new_amazon_price.split('$').pop().replace(',', '')) < float(product[4]):
-                    print(f'The product {product[1].replace("+", " ")} price dropped on Amazon')
+                    print(
+                        f'The product {product[1].replace("+", " ")} price dropped on Amazon'
+                    )
                 if float(new_ebay_price[4:]) < float(product[5]):
-                    print(f'The product {product[1].replace("+", " ")} price dropped on eBay')
+                    print(
+                        f'The product {product[1].replace("+", " ")} price dropped on eBay'
+                    )
                 if float(new_amazon_price.split('$').pop().replace(',', '')) < float(new_ebay_price[4:]):
-                    print(f'The product {product[1].replace("+", " ")} It has a lower price on Amazon')
+                    print(
+                        f'The product {product[1].replace("+", " ")} It has a lower price on Amazon'
+                    )
                 if float(new_ebay_price[4:]) < float(new_amazon_price.split('$').pop().replace(',', '')):
-                    print(f'The product {product[1].replace("+", " ")} It has a lower price on eBay')
+                    print(
+                        f'The product {product[1].replace("+", " ")} It has a lower price on eBay'
+                    )
                 
                 sleep(3600)
             except:
                 print("Cambio en el html de la pagina!!!")
 
+
 def init():
     '''
     Initializes the web scraping process.
-    Asks the user if they want to register a new product, then starts the price monitoring thread.
+
+    Asks the user if they want to register a new product,
+    then starts the price monitoring thread.
     '''
     print(" -- Web Scraping -- \n")
-    response = input("You want to register a new product? y/n: ")
+    response = input(
+        "You want to register a new product? y/n: "
+    )
 
     if response == "y":
         name = input("Enter the name of the product to search: ").replace(" ", "+")
@@ -127,7 +186,13 @@ def init():
         ebay_soup = get_soup(ebay_result_url)
         ebay_url, ebay_price = get_ebay_object(ebay_soup)
         
-        products = Products(name, amazon_url, ebay_url, amazon_price, ebay_price)
+        products = Products(
+            name,
+            amazon_url,
+            ebay_url,
+            amazon_price,
+            ebay_price
+        )
         print(products.save_products())
 
     thread = Thread(target=check_price)
