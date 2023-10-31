@@ -85,25 +85,29 @@ def check_price():
     while True:
         products = Products(None, None, None, None, None).get_products()
         for product in products:
-            amazon_soup = get_soup("https://www.amazon.com"+product[2])
-            ebay_soup = get_soup(product[3])
+            try:
+                amazon_soup = get_soup("https://www.amazon.com"+product[2])
+                ebay_soup = get_soup(product[3])
 
-            new_amazon_price = amazon_soup.find('span', {'class':'a-offscreen'}).text
-            new_ebay_price = ebay_soup.find('span', {'class':'ux-textspans ux-textspans--SECONDARY ux-textspans--BOLD'}).text
+                new_amazon_price = amazon_soup.find('span', {'class':'a-offscreen'}).text
+                new_ebay_price = ebay_soup.find('span', {'class':'ux-textspans ux-textspans--SECONDARY ux-textspans--BOLD'}).text
 
-            print(f'\nProduct {product[1].replace("+", " ")}: ')
-            print(f'Amazon: Old price: {str(product[4])} New price: {new_amazon_price.split('$').pop().replace(',', '')}')
-            print(f'eBay: Old price: {str(product[5])} New price: {new_ebay_price[4:]}')
+                print(f'\nProduct {product[1].replace("+", " ")}: ')
+                print(f'Amazon: Old price: {str(product[4])} New price: {new_amazon_price.split('$').pop().replace(',', '')}')
+                print(f'eBay: Old price: {str(product[5])} New price: {new_ebay_price[4:]}')
 
-            if float(new_amazon_price.split('$').pop().replace(',', '')) < float(product[4]):
-                print(f'The product {product[1].replace("+", " ")} price dropped on Amazon')
-            if float(new_ebay_price[4:]) < float(product[5]):
-                print(f'The product {product[1].replace("+", " ")} price dropped on eBay')
-            if float(new_amazon_price.split('$').pop().replace(',', '')) < float(new_ebay_price[4:]):
-                print(f'The product {product[1].replace("+", " ")} It has a lower price on Amazon')
-            if float(new_ebay_price[4:]) < float(new_amazon_price.split('$').pop().replace(',', '')):
-                print(f'The product {product[1].replace("+", " ")} It has a lower price on eBay')
-        sleep(3600)
+                if float(new_amazon_price.split('$').pop().replace(',', '')) < float(product[4]):
+                    print(f'The product {product[1].replace("+", " ")} price dropped on Amazon')
+                if float(new_ebay_price[4:]) < float(product[5]):
+                    print(f'The product {product[1].replace("+", " ")} price dropped on eBay')
+                if float(new_amazon_price.split('$').pop().replace(',', '')) < float(new_ebay_price[4:]):
+                    print(f'The product {product[1].replace("+", " ")} It has a lower price on Amazon')
+                if float(new_ebay_price[4:]) < float(new_amazon_price.split('$').pop().replace(',', '')):
+                    print(f'The product {product[1].replace("+", " ")} It has a lower price on eBay')
+                
+                sleep(3600)
+            except:
+                print("Cambio en el html de la pagina!!!")
 
 def init():
     '''
