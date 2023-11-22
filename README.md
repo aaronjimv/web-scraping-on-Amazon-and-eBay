@@ -12,7 +12,7 @@ This script defines the `Products` class used to interact with the database and 
 
 ### `connection.py`
 
-This script establishes a connection with a MySQL database. An XAMPP installation is required to run the database.
+This script establishes a connection with a MySQL database. A XAMPP installation is required to run the database.
 
 ## Required Libraries
 
