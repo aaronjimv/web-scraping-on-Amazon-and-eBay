@@ -20,5 +20,5 @@ Ensure you have the following Python libraries installed before running the scri
 
 - `selenium` (for web scraping).
 - `beautifulsoup4` (for HTML parsing).
-- `mysql-connector-python` (for communicating with the MySQL database)
+- `mysql-connector-python` (for communicating with the MySQL database).
 - `threading` (for managing threads)
